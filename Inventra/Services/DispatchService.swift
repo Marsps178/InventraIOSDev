@@ -14,10 +14,11 @@ class DispatchService {
             throw APIError.unauthorized
         }
         
-        return try await APIClient.shared.requestPaginated(
+        let result: (data: [Dispatch], pagination: Pagination) = try await APIClient.shared.requestPaginated(
             endpoint: .getDispatches(page: page, estado: estado, idMina: idMina),
             token: token
         )
+        return (dispatches: result.data, pagination: result.pagination)
     }
     
     func fetchDispatchDetail(id: Int) async throws -> DispatchDetail {

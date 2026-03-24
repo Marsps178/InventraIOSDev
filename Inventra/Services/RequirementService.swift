@@ -13,10 +13,11 @@ class RequirementService {
             throw APIError.unauthorized
         }
         
-        return try await APIClient.shared.requestPaginated(
+        let result: (data: [Requirement], pagination: Pagination) = try await APIClient.shared.requestPaginated(
             endpoint: .getRequirements(page: page, estado: estado),
             token: token
         )
+        return (requirements: result.data, pagination: result.pagination)
     }
     
     func fetchRequirementDetail(id: Int) async throws -> RequirementDetail {

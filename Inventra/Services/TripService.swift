@@ -13,10 +13,11 @@ class TripService {
             throw APIError.unauthorized
         }
         
-        return try await APIClient.shared.requestPaginated(
+        let result: (data: [Trip], pagination: Pagination) = try await APIClient.shared.requestPaginated(
             endpoint: .getTrips(page: page, estado: estado),
             token: token
         )
+        return (trips: result.data, pagination: result.pagination)
     }
     
     func fetchTripDetail(id: Int) async throws -> TripDetail {

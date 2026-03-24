@@ -13,10 +13,11 @@ class InventoryService {
             throw APIError.unauthorized
         }
         
-        return try await APIClient.shared.requestPaginated(
+        let result: (data: [Stock], pagination: Pagination) = try await APIClient.shared.requestPaginated(
             endpoint: .getStock(search: search, page: page),
             token: token
         )
+        return (stocks: result.data, pagination: result.pagination)
     }
     
     func fetchProducts(page: Int = 1) async throws -> (products: [Product], pagination: Pagination) {
@@ -24,10 +25,11 @@ class InventoryService {
             throw APIError.unauthorized
         }
         
-        return try await APIClient.shared.requestPaginated(
+        let result: (data: [Product], pagination: Pagination) = try await APIClient.shared.requestPaginated(
             endpoint: .getProducts(page: page),
             token: token
         )
+        return (products: result.data, pagination: result.pagination)
     }
     
     func fetchMines() async throws -> [Mine] {
