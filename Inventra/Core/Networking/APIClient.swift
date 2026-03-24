@@ -70,6 +70,12 @@ class APIClient {
         body: Encodable? = nil,
         token: String? = nil
     ) async throws -> T {
+        // TIER 1 #2: Check network connectivity
+        guard NetworkMonitor.shared.isConnected else {
+            Logger.log("No hay conexión a internet", level: .error)
+            throw APIError.networkError(URLError(.networkConnectionLost))
+        }
+        
         guard var urlComponents = URLComponents(string: baseURL + endpoint.path) else {
             throw APIError.invalidURL
         }

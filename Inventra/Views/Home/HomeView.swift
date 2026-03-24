@@ -5,24 +5,29 @@ struct HomeView: View {
     let user: User
     
     var body: some View {
-        TabView {
-            // Despachos Tab
-            DispatchesListView()
-                .tabItem {
-                    Label("Despachos", systemImage: "truck.box.fill")
-                }
+        ZStack(alignment: .top) {
+            TabView {
+                // Despachos Tab
+                DispatchesListView()
+                    .tabItem {
+                        Label("Despachos", systemImage: "truck.box.fill")
+                    }
+                
+                // Requerimientos Tab
+                RequirementsListView()
+                    .tabItem {
+                        Label("Requerimientos", systemImage: "list.clipboard.fill")
+                    }
+                
+                // Perfil Tab
+                ProfileView(user: user)
+                    .tabItem {
+                        Label("Perfil", systemImage: "person.fill")
+                    }
+            }
             
-            // Requerimientos Tab
-            RequirementsListView()
-                .tabItem {
-                    Label("Requerimientos", systemImage: "list.clipboard.fill")
-                }
-            
-            // Perfil Tab
-            ProfileView(user: user)
-                .tabItem {
-                    Label("Perfil", systemImage: "person.fill")
-                }
+            // TIER 1 #2: Network status indicator
+            NetworkAlertView()
         }
     }
 }
