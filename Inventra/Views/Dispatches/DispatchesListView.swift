@@ -2,39 +2,51 @@ import SwiftUI
 
 struct DispatchesListView: View {
     @State var viewModel = DispatchesListViewModel()
-    
+
     var body: some View {
         NavigationStack {
             if viewModel.isLoading {
                 LoadingView()
             } else if let errorMessage = viewModel.errorMessage {
                 ErrorView(message: errorMessage) {
-                    Task {
-                        await viewModel.fetchDispatches()
-                    }
+                    Task { await viewModel.fetchDispatches() }
                 }
             } else {
                 List {
                     ForEach(viewModel.dispatches) { dispatch in
                         NavigationLink(destination: DispatchDetailView(id: dispatch.id)) {
-                            VStack(alignment: .leading, spacing: 8) {
+                            VStack(alignment: .leading, spacing: 6) {
                                 HStack {
                                     Text(dispatch.codigo)
                                         .fontWeight(.semibold)
                                     Spacer()
                                     Badge(dispatch.estado)
                                 }
-                                
-                                if let mina = dispatch.mina?.nombre {
-                                    Text(mina)
-                                        .font(.caption)
-                                        .foregroundColor(.gray)
+
+                                // usa .nombreMina computed helper del modelo corregido
+                                Text(dispatch.nombreMina)
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+
+                                HStack {
+                                    // usa .cantidadProductos (despacho_detalles?.count)
+                                    Image(systemName: "shippingbox")
+                                        .font(.caption2)
+                                        .foregroundColor(.secondary)
+                                    Text("\(dispatch.cantidadProductos) producto(s)")
+                                        .font(.caption2)
+                                        .foregroundColor(.secondary)
+
+                                    Spacer()
+
+                                    if let vale = dispatch.numero_vale {
+                                        Text("Vale: \(vale)")
+                                            .font(.caption2)
+                                            .foregroundColor(.secondary)
+                                    }
                                 }
-                                
-                                Text("\(dispatch.total_productos) producto(s)")
-                                    .font(.caption2)
-                                    .foregroundColor(.gray)
                             }
+                            .padding(.vertical, 2)
                         }
                     }
                 }
@@ -42,9 +54,7 @@ struct DispatchesListView: View {
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) {
                         Button(action: {
-                            Task {
-                                await viewModel.fetchDispatches()
-                            }
+                            Task { await viewModel.fetchDispatches() }
                         }) {
                             Image(systemName: "arrow.clockwise")
                         }
@@ -53,9 +63,7 @@ struct DispatchesListView: View {
             }
         }
         .onAppear {
-            Task {
-                await viewModel.fetchDispatches()
-            }
+            Task { await viewModel.fetchDispatches() }
         }
     }
 }
