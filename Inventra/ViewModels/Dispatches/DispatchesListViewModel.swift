@@ -7,13 +7,15 @@ class DispatchesListViewModel {
     var pagination: Pagination?
     var isLoading: Bool = false
     var errorMessage: String?
-    var selectedEstado: String? = "EN_TRANSITO" // Por defecto, mostrar en tránsito
-    
+    // Por defecto mostrar todos los despachos activos
+    var selectedEstado: String? = nil
+
     func fetchDispatches(page: Int = 1) async {
         isLoading = true
         errorMessage = nil
-        
+
         do {
+            // DispatchService.fetchDispatches ahora acepta (page, limit, estado, idMina)
             let result = try await DispatchService.shared.fetchDispatches(
                 page: page,
                 estado: selectedEstado
@@ -23,9 +25,9 @@ class DispatchesListViewModel {
         } catch let error as APIError {
             errorMessage = error.localizedDescription
         } catch {
-            errorMessage = "Error desconocido"
+            errorMessage = "Error desconocido: \(error.localizedDescription)"
         }
-        
+
         isLoading = false
     }
 }
