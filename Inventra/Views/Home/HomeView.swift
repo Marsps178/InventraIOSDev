@@ -43,7 +43,7 @@ struct ProfileView: View {
                         Text("Nombre")
                             .fontWeight(.semibold)
                         Spacer()
-                        Text(user.fullName)
+                        Text(user.nombreCompleto)
                             .foregroundColor(.gray)
                     }
                     
@@ -84,11 +84,9 @@ struct ProfileView: View {
 
 #Preview {
     HomeView(user: User(
-        id_usuario: 1,
-        username: "admin",
-        rol: "ADMIN",
-        id_mina: nil,
-        nombre: "Juan",
-        apellidos: "Pérez"
-    ))
+            id_usuario: 1,
+            username: "admin",
+            nombreCompleto: "Juan Pérez",
+            rol: "ADMIN"
+        ))
 }

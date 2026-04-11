@@ -12,9 +12,7 @@ class APIClient {
     private var isRefreshing = false
     private var refreshTask: Task<Void, Error>?
 
-    // ⚠️ CONFIGURAR: cambiar por la IP real del servidor
-    // Simulador iOS  → http://localhost:3000/api
-    // Dispositivo físico → http://192.168.X.X:3000/api
+
     init(baseURL: String = "http://localhost:3000/api", session: URLSession = .shared) {
         self.baseURL = baseURL
         self.session = session
@@ -202,6 +200,11 @@ class APIClient {
 
             let decoder = JSONDecoder()
             decoder.dateDecodingStrategy = .iso8601
+
+            // DEBUG: Log raw response
+            if let jsonString = String(data: data, encoding: .utf8) {
+                Logger.log("Raw JSON response: \(jsonString)", level: .debug)
+            }
 
             // Intentar decodificar como respuesta envuelta { status, data }
             let decodedResponse = try decoder.decode(APIResponse<T>.self, from: data)
